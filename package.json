@@ -1,0 +1,126 @@
+{
+  "name": "environ",
+  "displayName": "Environ",
+  "publisher": "funelk",
+  "description": "Inject environment variables from .env files into VS Code tasks, terminals, and debug configurations",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/funelk/environ"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "environ",
+        "title": "Environ: Reference environment variable (eg. `${command:environ?PATH}`)"
+      },
+      {
+        "command": "environ.configureEnvFileName",
+        "title": "Environ: Configure environment file name"
+      },
+      {
+        "command": "environ.showEnvStatus",
+        "title": "Environ: Show environment variables status"
+      },
+      {
+        "command": "environ.refreshEnvironment",
+        "title": "Environ: Refresh environment variables"
+      },
+      {
+        "command": "environ.configureVariableFilter",
+        "title": "Environ: Configure variable filter"
+      },
+      {
+        "command": "environ.applyToTerminal",
+        "title": "Environ: Apply environment file variables to terminal.integrated.env.*"
+      },
+      {
+        "command": "environ.createTerminalWithEnv",
+        "title": "Environ: New terminal with environment file variables"
+      },
+      {
+        "command": "environ.reopenWorkspace",
+        "title": "Environ: Reopen workspace to refresh environment variables"
+      },
+      {
+        "command": "environ.openSettings",
+        "title": "Environ: Open extension settings"
+      }
+    ],
+    "terminal": {
+      "profiles": [
+        {
+          "id": "environ.terminal",
+          "title": "Terminal with environment file variables"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Environ",
+      "properties": {
+        "environ.envFileName": {
+          "type": "string",
+          "default": ".env",
+          "description": "The name of the environment file to search for in the workspace and parent directories. Default is '.env'."
+        },
+        "environ.prependCwdComponentsToPath": {
+          "type": "boolean",
+          "default": true,
+          "description": "When true, disable prepending the workspace folder and all parent directories to the PATH environment variable. By default, workspace directories are prepended to PATH."
+        },
+        "environ.pathResolves": {
+          "type": "object",
+          "default": {},
+          "description": "Configure which environment variables should regard as path. Keys are variable names, values are the optional prefix path used for path resolving (by default, the primary workspace folder is used as the prefix).",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "environ.mergeStrategies": {
+          "type": "object",
+          "default": {
+            "PATH": "prepend"
+          },
+          "description": "Configure how to merge environment variables when they exist in both .env and system environment. Keys are variable names, values are merge strategies: 'overwrite' (use .env value), 'prepend' (prepend .env value with path separator), 'append' (append .env value with path separator). Default strategy for unlisted variables is 'overwrite'.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "replace",
+              "prepend",
+              "append"
+            ]
+          }
+        },
+        "environ.presets": {
+          "type": "object",
+          "default": {},
+          "description": "Static environment variables defined in settings. These values are applied before environment files and support ${VAR} expansion.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "prepublishOnly": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "24.9.2",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "dotenv": "17.2.3",
+    "dotenv-expand": "10.0.0"
+  }
+}
